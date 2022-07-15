@@ -28,6 +28,8 @@ A sample setup of snmp + exporter + prometheus +grafana
 make
 ```
 
+![image](https://user-images.githubusercontent.com/108666941/179147448-41d3ebd6-e1ca-46b1-bfd4-d745d3dff835.png)
+
 ### Result Observation
 
 Follow these instructions to view your result.
