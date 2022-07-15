@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  snmp:
+    image: xeemetric/snmp-simulator
+    container_name: snmpex_snmp
+    restart: unless-stopped
+    ports:
+      - 161:161/udp
+
+  snmp-1:
+    image: xeemetric/snmp-simulator
+    container_name: snmpex_snmp-1
+    restart: unless-stopped
+    ports:
+      - 160:161/udp
+
+  snmp-exporter:
+    image: prom/snmp-exporter
+    container_name: snmpex_exporter
+    restart: unless-stopped
+    ports:
+      - 9116:9116
+    depends_on:
+      - snmp
+      - snmp-1
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    container_name: snmpex_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - 9090:9090
